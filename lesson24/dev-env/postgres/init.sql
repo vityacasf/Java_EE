@@ -1,7 +1,8 @@
-CREATE TABLE users
+CREATE TABLE usersInNetwork
 (
-    name VARCHAR NOT NULL UNIQUE
+    login VARCHAR NOT NULL UNIQUE,
+    password VARCHAR NOT NULL
 );
 
-INSERT INTO users (name)
-VALUES ('Viktor');
+INSERT INTO usersInNetwork (login, password) VALUES ('Vityacasf', '3214');
+

@@ -14,8 +14,8 @@ docker run --rm \
 docker run --rm \
     --name demo-postgres \
     --network demo_network \
-    -e POSTGRES_USER=vityacasf \
-    -e POSTGRES_PASSWORD=1905 \
+    -e POSTGRES_USER=postgres \
+    -e POSTGRES_PASSWORD=postgres \
     -p 5432:5432 \
     -v "/Users/vityacasf/IDEA_Projects/JavaEE/lesson24/dev-env/postgres/init.sql:/docker-entrypoint-initdb.d/1-init.sql" \
     postgres:13.4-alpine

@@ -2,35 +2,30 @@ package com.socialMedia.filter;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@WebFilter(urlPatterns = "/*")
-public class LoggingFilter implements Filter {
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-        Filter.super.init(filterConfig);
+
+    @WebFilter(urlPatterns = "/Output.jsp",
+            dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
+    public class LoggingFilter implements Filter {
+
+        @Override
+        public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+            HttpServletRequest request = (HttpServletRequest) servletRequest;
+            HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+            Cookie[] cookies = request.getCookies();
+            if ((String) request.getServletContext().getAttribute("username") != null) {
+                filterChain.doFilter(request, response);
+            } else {
+                request.getRequestDispatcher("/Authorization.jsp").forward(request, response);
+            }
+        }
     }
 
-    @Override
-    public void doFilter(
-            ServletRequest request,
-            ServletResponse response,
-            FilterChain chain
-    ) throws IOException, ServletException {
-        System.out.println("(Filter) Start. The caller IP is " + request.getLocalAddr());
-        chain.doFilter(request, response);
-        System.out.println("(Filter) Finish. ");
-    }
 
-    @Override
-    public void destroy() {
-        Filter.super.destroy();
-    }
-}
