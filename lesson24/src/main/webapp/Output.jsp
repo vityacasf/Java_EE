@@ -1,5 +1,5 @@
-<%@ page import="com.socialMedia.service.OutputService" %>
-<%@ page import="com.socialMedia.model.User" %>
+<%@ page import="com.socialmedia.service.OutputService" %>
+<%@ page import="com.socialmedia.model.User" %>
 <%@ page import="java.io.Writer" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.io.IOException" %><%--

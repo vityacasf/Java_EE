@@ -1,4 +1,4 @@
-package com.socialMedia.filter;
+package com.socialmedia.filter;
 
 import java.io.IOException;
 
@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-    @WebFilter(urlPatterns = "/Output.jsp",
-            dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
-    public class LoggingFilter implements Filter {
+@WebFilter(urlPatterns = "/Output.jsp",
+        dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
+public class LoggingFilter implements Filter {
 
         @Override
         public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

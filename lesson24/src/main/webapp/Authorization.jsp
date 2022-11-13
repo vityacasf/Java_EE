@@ -11,10 +11,10 @@
     <title>Authorization</title>
 </head>
 <body>
-<form action="authorization" method="post">
-  Username: <input type="text" name="username"/> <br/>
-  Password: <input type="password" name="password"/> <br/>
-  <input type="submit" value="Authorization" />
+<form action="authorization" method="POST">
+  Username: <input type="text" name="username"> <br>
+  Password: <input type="password" name="password"> <br>
+  <input type="submit" value="Authorization" >
 </form>
 </body>
 </html>

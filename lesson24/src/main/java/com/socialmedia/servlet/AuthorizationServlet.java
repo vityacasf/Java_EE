@@ -1,6 +1,6 @@
-package com.socialMedia.servlet;
+package com.socialmedia.servlet;
 
-import com.socialMedia.service.UserService;
+import com.socialmedia.service.UserService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -14,6 +14,7 @@ import java.io.Writer;
 @WebServlet("/authorization")
 public class AuthorizationServlet extends HttpServlet {
     private UserService userService;
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         userService = (UserService) config.getServletContext().getAttribute("userService");
@@ -23,8 +24,8 @@ public class AuthorizationServlet extends HttpServlet {
     protected void doPost (HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
 
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        final String username = req.getParameter("username");
+        final String password = req.getParameter("password");
 
         try (Writer writer = resp.getWriter()){
             if (userService.authentication(username, password)) {

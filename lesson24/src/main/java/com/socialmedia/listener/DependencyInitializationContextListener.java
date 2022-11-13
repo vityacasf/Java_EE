@@ -1,4 +1,4 @@
-package com.socialMedia.listener;
+package com.socialmedia.listener;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,9 +8,9 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import com.socialMedia.repository.JdbcUserRepository;
-import com.socialMedia.repository.UserRepository;
-import com.socialMedia.service.UserService;
+import com.socialmedia.repository.JdbcUserRepository;
+import com.socialmedia.repository.UserRepository;
+import com.socialmedia.service.UserService;
 
 @WebListener
 public class DependencyInitializationContextListener implements ServletContextListener {

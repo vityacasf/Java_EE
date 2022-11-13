@@ -1,7 +1,7 @@
-package com.socialMedia.servlet;
+package com.socialmedia.servlet;
 
 
-import com.socialMedia.service.UserService;
+import com.socialmedia.service.UserService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -33,7 +33,7 @@ public class RegistrationServlet extends HttpServlet {
                 writer.write("This login is already registered");
                 req.getServletContext().getRequestDispatcher("/Authorization.jsp").forward(req, resp);
             } else {
-                req.getServletContext().getRequestDispatcher("/authorization").forward(req, resp);
+                req.getServletContext().getRequestDispatcher("/Registration.jsp").forward(req, resp);
             }
         }
 

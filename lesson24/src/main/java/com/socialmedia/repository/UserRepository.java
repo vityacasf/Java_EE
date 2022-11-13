@@ -1,16 +1,16 @@
-package com.socialMedia.repository;
+package com.socialmedia.repository;
 
 import java.util.List;
 
-import com.socialMedia.model.User;
+import com.socialmedia.model.User;
 
 public interface UserRepository {
 
         boolean isUserExists(String login, String password);
 
-        boolean findUserByName(String login);
+        boolean isUserExists(String login);
 
-        boolean insertNewUser(String login, String password);
+        boolean insertUser(String login, String password);
 
         List<User> getAllUsers();
 

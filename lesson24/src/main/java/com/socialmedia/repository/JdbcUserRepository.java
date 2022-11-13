@@ -1,10 +1,10 @@
-package com.socialMedia.repository;
+package com.socialmedia.repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.socialMedia.model.User;
+import com.socialmedia.model.User;
 
 public class JdbcUserRepository implements UserRepository {
 
@@ -13,7 +13,7 @@ public class JdbcUserRepository implements UserRepository {
     private final String FIND_ALL_USERS_BY_PARAMETER_SQL = "select login from users where login like ?";
     private final String IS_USER_EXISTS_SQL = "select login from users where login=? and password=?";
     private final String FIND_USER_BY_NAME_SQL = "select * from users where login=?";
-    private final String INSERT_NEW_USER_SQL = "insert into users values ( ?, ?)";
+    private final String INSERT_NEW_USER_SQL = "insert into users (login, password) values ( ?, ?)";
 
     public JdbcUserRepository(Connection connection) {
         this.connection = connection;
@@ -34,7 +34,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean findUserByName(String login) {
+    public boolean isUserExists(String login) {
         try (PreparedStatement statement = connection.prepareStatement(FIND_USER_BY_NAME_SQL)){
             statement.setString(1, login);
 
@@ -47,13 +47,14 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     @Override
-    public boolean insertNewUser(String login, String password) {
+    public boolean insertUser(String login, String password) {
         try (PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER_SQL)) {
             statement.setString(1, login);
             statement.setString(2, password);
             statement.executeUpdate();
             return true;
         } catch (SQLException e) {
+            System.out.println("пользователь добавлен");
             return false;
         }
     }

@@ -1,7 +1,7 @@
-package com.socialMedia.service;
+package com.socialmedia.service;
 
-import com.socialMedia.model.User;
-import com.socialMedia.repository.UserRepository;
+import com.socialmedia.model.User;
+import com.socialmedia.repository.UserRepository;
 
 import java.util.List;
 
