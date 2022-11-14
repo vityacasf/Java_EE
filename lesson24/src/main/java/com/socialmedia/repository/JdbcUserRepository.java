@@ -3,92 +3,81 @@ package com.socialmedia.repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.socialmedia.model.User;
 
 public class JdbcUserRepository implements UserRepository {
 
     private final Connection connection;
-    private final String FIND_ALL_USERS_SQL = "select * from users";
-    private final String FIND_ALL_USERS_BY_PARAMETER_SQL = "select login from users where login like ?";
-    private final String IS_USER_EXISTS_SQL = "select login from users where login=? and password=?";
-    private final String FIND_USER_BY_NAME_SQL = "select * from users where login=?";
-    private final String INSERT_NEW_USER_SQL = "insert into users (login, password) values ( ?, ?)";
 
     public JdbcUserRepository(Connection connection) {
         this.connection = connection;
     }
 
     @Override
-    public boolean isUserExists(String login, String password) {
-        try (PreparedStatement statement = connection.prepareStatement(IS_USER_EXISTS_SQL)) {
-            statement.setString(1, login);
-            statement.setString(2, password);
-
-            ResultSet rs = statement.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            e.getStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isUserExists(String login) {
-        try (PreparedStatement statement = connection.prepareStatement(FIND_USER_BY_NAME_SQL)){
-            statement.setString(1, login);
-
-            ResultSet rs = statement.executeQuery();
-            return rs.next();
-        } catch (SQLException e) {
-            e.getStackTrace();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean insertUser(String login, String password) {
-        try (PreparedStatement statement = connection.prepareStatement(INSERT_NEW_USER_SQL)) {
-            statement.setString(1, login);
-            statement.setString(2, password);
-            statement.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.out.println("пользователь добавлен");
-            return false;
-        }
-    }
-
-    @Override
-    public List<User> getAllUsers() {
+    public List<User> findUsers() {
         try (Statement statement = connection.createStatement()){
-            ResultSet rs = statement.executeQuery(FIND_ALL_USERS_SQL);
-            List<User> users = new ArrayList<>();
-
+            String sql = "select login, password from users";
+            ResultSet rs = statement.executeQuery(sql);
+            final List<User> users = new ArrayList<>();
             while (rs.next()) {
-                users.add(new User(rs.getString("login")));
+                users.add(buildUser(rs));
             }
             return users;
         } catch (SQLException e) {
-            e.getStackTrace();
-            return new ArrayList<>();
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public List<User> getAllUsers(String parameter) {
-        try (PreparedStatement statement = connection.prepareStatement(FIND_ALL_USERS_BY_PARAMETER_SQL)) {
-            statement.setString(1, parameter + "%");
+    public Optional<User> getUser(String login) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "select login, password from users where login = ?")){
+            statement.setString(1, login);
             ResultSet rs = statement.executeQuery();
-            List<User> users = new ArrayList<>();
+            if (rs.next()) {
+                return Optional.of(buildUser(rs));
+            }
+            return Optional.empty();
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void createUser(String login, String password) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "insert into users (login, password) values (?, ?)");
+            statement.setString(1, login);
+            statement.setString(2, password);
+            statement.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private User buildUser(ResultSet rs) throws SQLException {
+        return new User(
+                rs.getString("login"),
+                rs.getString("password")
+        );
+    }
+
+    public List <User> findUsersStartWith (String login) {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "select login, password from users where login like concat('%', ?, '%')")){
+            statement.setString(1, login);
+            ResultSet rs = statement.executeQuery();
+            final List<User> users = new ArrayList<>();
             while (rs.next()) {
-                users.add(new User(rs.getString("login")));
+                users.add(buildUser(rs));
             }
             return users;
         } catch (SQLException e) {
-            e.getStackTrace();
-            return new ArrayList<>();
+            throw new RuntimeException(e);
         }
     }
 }

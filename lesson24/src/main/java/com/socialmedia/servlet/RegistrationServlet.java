@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.Writer;
 
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
@@ -22,20 +21,14 @@ public class RegistrationServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html");
-
-        String username = req.getParameter("username");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String login = req.getParameter("login");
         String password = req.getParameter("password");
-
-        try (Writer writer = resp.getWriter()){
-            if (userService.registration(username, password)) {
-                writer.write("This login is already registered");
-                req.getServletContext().getRequestDispatcher("/Authorization.jsp").forward(req, resp);
-            } else {
-                req.getServletContext().getRequestDispatcher("/Registration.jsp").forward(req, resp);
-            }
+        try {
+            userService.createUser(login, password);
+        } catch (Exception a) {
+            resp.sendRedirect("registrationPage?error=" + a.getMessage());
         }
-
+        resp.sendRedirect("registrationPage");
     }
 }

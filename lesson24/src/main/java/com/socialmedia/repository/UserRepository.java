@@ -1,18 +1,17 @@
 package com.socialmedia.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.socialmedia.model.User;
 
 public interface UserRepository {
 
-        boolean isUserExists(String login, String password);
+        List<User> findUsers();
 
-        boolean isUserExists(String login);
+        Optional<User> getUser(String login);
 
-        boolean insertUser(String login, String password);
+        void createUser(String login, String password);
 
-        List<User> getAllUsers();
-
-        List<User> getAllUsers(String parameter);
-    }
+        List<User> findUsersStartWith(String login);
+}

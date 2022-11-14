@@ -21,7 +21,6 @@ public class DependencyInitializationContextListener implements ServletContextLi
         final String username = sce.getServletContext().getInitParameter("db_user");
         final String password = sce.getServletContext().getInitParameter("db_password");
         final String dbUrl = sce.getServletContext().getInitParameter("db_url");
-
         try {
             Class.forName(dbDriver);
             final Connection con = DriverManager.getConnection(dbUrl, username, password);
@@ -29,8 +28,7 @@ public class DependencyInitializationContextListener implements ServletContextLi
             UserService userService = new UserService(repository);
             sce.getServletContext().setAttribute("userService", userService);
         } catch (Exception e) {
-
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to establish connection with database");
         }
     }
 

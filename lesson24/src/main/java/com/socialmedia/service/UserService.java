@@ -1,6 +1,10 @@
 package com.socialmedia.service;
 
+import com.socialmedia.model.User;
 import com.socialmedia.repository.UserRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 public class UserService {
 
@@ -10,30 +14,22 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public boolean authentication(String login, String password) {
-        return isExists(login, password);
+    public List<User> findUsers() {
+        return userRepository.findUsers();
     }
 
-    public boolean registration(String login, String password) {
-
-        if (findUserByLogin(login)) {
-            return false;
-        } else {
-            registerUser(login, password);
-            return true;
+    public void createUser(String login, String password) {
+        if (userRepository.getUser(login).isPresent()) {
+            throw new RuntimeException("User already exists");
         }
+        userRepository.createUser(login, password);
     }
 
-    public boolean isExists(String login, String password) {
-        return userRepository.isUserExists(login, password);
+    public Optional <User> getUser (String login) {
+        return userRepository.getUser(login);
     }
 
-    public boolean findUserByLogin(String login) {
-        return userRepository.isUserExists(login);
+    public List<User> findUsersStartWith(String login) {
+        return userRepository.findUsersStartWith(login);
     }
-
-    public boolean registerUser(String login, String password) {
-        return userRepository.insertUser(login, password);
-    }
-
 }
