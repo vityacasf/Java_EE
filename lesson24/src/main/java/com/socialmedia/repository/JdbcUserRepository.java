@@ -10,6 +10,11 @@ import com.socialmedia.model.User;
 public class JdbcUserRepository implements UserRepository {
 
     private final Connection connection;
+    private final String FIND_USER_SQL = "select login, password from users";
+    private final String GET_USER_SQL = "select login, password from users where login = ?";
+    private final String CREATE_USER_SQL = "insert into users (login, password) values (?, ?)";
+    private final String FIND_USER_STARTS_WITH_SQL =
+            "select login, password from users where login like concat('%', ?, '%')";
 
     public JdbcUserRepository(Connection connection) {
         this.connection = connection;
@@ -18,8 +23,7 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public List<User> findUsers() {
         try (Statement statement = connection.createStatement()){
-            String sql = "select login, password from users";
-            ResultSet rs = statement.executeQuery(sql);
+            ResultSet rs = statement.executeQuery(FIND_USER_SQL);
             final List<User> users = new ArrayList<>();
             while (rs.next()) {
                 users.add(buildUser(rs));
@@ -32,8 +36,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public Optional<User> getUser(String login) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "select login, password from users where login = ?")){
+        try (PreparedStatement statement = connection.prepareStatement(GET_USER_SQL)){
             statement.setString(1, login);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
@@ -48,9 +51,7 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public void createUser(String login, String password) {
-        try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "insert into users (login, password) values (?, ?)");
+        try(PreparedStatement statement = connection.prepareStatement(CREATE_USER_SQL)) {
             statement.setString(1, login);
             statement.setString(2, password);
             statement.execute();
@@ -67,8 +68,7 @@ public class JdbcUserRepository implements UserRepository {
     }
 
     public List <User> findUsersStartWith (String login) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "select login, password from users where login like concat('%', ?, '%')")){
+        try(PreparedStatement statement = connection.prepareStatement(FIND_USER_STARTS_WITH_SQL)){
             statement.setString(1, login);
             ResultSet rs = statement.executeQuery();
             final List<User> users = new ArrayList<>();

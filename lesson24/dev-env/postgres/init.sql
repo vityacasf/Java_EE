@@ -5,3 +5,4 @@ CREATE TABLE users
 );
 
 INSERT INTO users (login, password) VALUES ('Vityacasf', '3214');
+

@@ -43,7 +43,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             PrintWriter out = response.getWriter();
             out.println("Username or password error");
-            getServletContext().getRequestDispatcher("registrationPage").forward(request, response);
+            getServletContext().getRequestDispatcher("login").forward(request, response);
         }
     }
 }
