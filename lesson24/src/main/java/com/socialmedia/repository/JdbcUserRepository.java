@@ -10,10 +10,10 @@ import com.socialmedia.model.User;
 public class JdbcUserRepository implements UserRepository {
 
     private final Connection connection;
-    private final String FIND_USER_SQL = "select login, password from users";
-    private final String GET_USER_SQL = "select login, password from users where login = ?";
-    private final String CREATE_USER_SQL = "insert into users (login, password) values (?, ?)";
-    private final String FIND_USER_STARTS_WITH_SQL =
+    private static final String FIND_USER_SQL = "select login, password from users";
+    private static final String GET_USER_SQL = "select login, password from users where login = ?";
+    private static final String CREATE_USER_SQL = "insert into users (login, password) values (?, ?)";
+    private static final String FIND_USER_STARTS_WITH_SQL =
             "select login, password from users where login like concat('%', ?, '%')";
 
     public JdbcUserRepository(Connection connection) {
