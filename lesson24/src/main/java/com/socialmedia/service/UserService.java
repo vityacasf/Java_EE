@@ -8,28 +8,26 @@ import java.util.Optional;
 
 public class UserService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
-    public List<User> findUsers() {
-        return userRepository.findUsers();
+  public List<User> findUsers() {
+    return userRepository.findUsers();
+  }
+  public void createUser(String login, String password) {
+    if (userRepository.getUser(login).isPresent()) {
+      throw new RuntimeException("User already exists");
     }
+    userRepository.createUser(login, password);
+  }
 
-    public void createUser(String login, String password) {
-        if (userRepository.getUser(login).isPresent()) {
-            throw new RuntimeException("User already exists");
-        }
-        userRepository.createUser(login, password);
-    }
-
-    public Optional <User> getUser (String login) {
-        return userRepository.getUser(login);
-    }
-
-    public List<User> findUsersStartWith(String login) {
-        return userRepository.findUsersStartWith(login);
-    }
+  public Optional<User> getUser(String login) {
+    return userRepository.getUser(login);
+  }
+  public List<User> findUsersStartWith(String login) {
+    return userRepository.findUsersStartWith(login);
+  }
 }

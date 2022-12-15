@@ -13,22 +13,22 @@ import java.io.IOException;
 
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
-    private UserService userService;
+  private UserService userService;
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        userService = (UserService) config.getServletContext().getAttribute("userService");
-    }
+  @Override
+  public void init(ServletConfig config) throws ServletException {
+    userService = (UserService) config.getServletContext().getAttribute("userService");
+  }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
-        try {
-            userService.createUser(login, password);
-        } catch (Exception a) {
-            resp.sendRedirect("registrationPage?error=" + a.getMessage());
-        }
-        resp.sendRedirect("registrationPage");
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    String login = req.getParameter("login");
+    String password = req.getParameter("password");
+    try {
+      userService.createUser(login, password);
+    } catch (Exception a) {
+      resp.sendRedirect("registrationPage?error=" + a.getMessage());
     }
+    resp.sendRedirect("registrationPage");
+  }
 }

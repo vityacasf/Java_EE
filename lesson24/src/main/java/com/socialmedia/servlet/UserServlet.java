@@ -15,24 +15,23 @@ import java.util.Map;
 
 @WebServlet("/users")
 public class UserServlet extends HttpServlet {
+  private UserService userService;
 
-    private UserService userService;
+  @Override
+  public void init(ServletConfig config) throws ServletException {
+    userService = (UserService) config.getServletContext().getAttribute("userService");
+  }
 
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        userService = (UserService) config.getServletContext().getAttribute("userService");
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    Map<String, String[]> parameterMap = req.getParameterMap();
+    if (parameterMap.containsKey("login")) {
+      String loginParameter = req.getParameter("login");
+      List<User> users = userService.findUsersStartWith(loginParameter);
+      req.setAttribute("users", users);
+    } else {
+      final List<User> users = userService.findUsers();
+      req.setAttribute("users", users);
     }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Map<String, String[]> parameterMap = req.getParameterMap();
-        if (parameterMap.containsKey("login")) {
-            String loginParameter = req.getParameter("login");
-            List<User> users = userService.findUsersStartWith(loginParameter);
-            req.setAttribute("users", users);
-        } else {
-            final List<User> users = userService.findUsers();
-            req.setAttribute("users", users);
-        }
-    }
+  }
 }
