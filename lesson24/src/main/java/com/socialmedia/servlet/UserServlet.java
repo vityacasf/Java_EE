@@ -33,5 +33,6 @@ public class UserServlet extends HttpServlet {
       final List<User> users = userService.findUsers();
       req.setAttribute("users", users);
     }
+    getServletContext().getRequestDispatcher("/main").forward(req, resp);
   }
 }

@@ -17,11 +17,14 @@ public class UserService {
   public List<User> findUsers() {
     return userRepository.findUsers();
   }
-  public void createUser(String login, String password) {
-    if (userRepository.getUser(login).isPresent()) {
-      throw new RuntimeException("User already exists");
+
+  public boolean createUser(String login, String password) {
+    if (isExists(login)) {
+      return false;
+    } else {
+      userRepository.createUser(login, password);
+      return true;
     }
-    userRepository.createUser(login, password);
   }
 
   public Optional<User> getUser(String login) {
@@ -30,4 +33,9 @@ public class UserService {
   public List<User> findUsersStartWith(String login) {
     return userRepository.findUsersStartWith(login);
   }
+
+  public boolean isExists(String login) {
+    return userRepository.isExists(login);
+  }
 }
+

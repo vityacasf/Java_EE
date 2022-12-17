@@ -13,6 +13,7 @@ import com.socialmedia.model.User;
 
 public class JdbcUserRepository implements UserRepository {
   private final Connection connection;
+  private static final String USER_IS_EXISTS_SQL = "select login from users where login=?";
   private static final String FIND_USER_SQL = "select login, password from users";
   private static final String GET_USER_SQL = "select login, password from users where login = ?";
   private static final String CREATE_USER_SQL = "insert into users (login, password) values (?, ?)";
@@ -79,6 +80,19 @@ public class JdbcUserRepository implements UserRepository {
       return users;
     } catch (SQLException e) {
       throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public boolean isExists(String login) {
+    try (PreparedStatement statement = connection.prepareStatement(USER_IS_EXISTS_SQL)) {
+      statement.setString(1, login);
+
+      ResultSet rs = statement.executeQuery();
+      return rs.next();
+    } catch (SQLException e) {
+      e.getStackTrace();
+      return false;
     }
   }
 }

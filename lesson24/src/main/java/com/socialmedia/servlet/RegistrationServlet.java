@@ -21,14 +21,17 @@ public class RegistrationServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    String login = req.getParameter("login");
-    String password = req.getParameter("password");
-    try {
-      userService.createUser(login, password);
-    } catch (Exception a) {
-      resp.sendRedirect("registrationPage?error=" + a.getMessage());
+  protected void doPost(final HttpServletRequest req, final HttpServletResponse resp)
+      throws ServletException, IOException {
+
+    String login = req.getParameter("inputLogin");
+    String password = req.getParameter("inputPassword");
+
+    if (userService.createUser(login, password)) {
+      req.getServletContext().getRequestDispatcher("/authorization").forward(req, resp);
+    } else {
+      req.getServletContext().getRequestDispatcher("/Authorization.jsp").forward(req, resp);
     }
-    resp.sendRedirect("registrationPage");
+
   }
 }

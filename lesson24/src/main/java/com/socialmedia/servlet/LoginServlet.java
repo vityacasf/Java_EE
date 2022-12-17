@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Optional;
+import java.io.Writer;
+import java.util.List;
+import java.util.Map;
+
 
 @WebServlet("/loginUser")
 public class LoginServlet extends HttpServlet {
@@ -24,26 +26,33 @@ public class LoginServlet extends HttpServlet {
   }
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
-    getServletContext().getRequestDispatcher("/login").forward(request, response);
+  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    Map<String, String[]> parameterMap = req.getParameterMap();
+    if (parameterMap.containsKey("login")) {
+      String loginParameter = req.getParameter("login");
+      List<User> users = userService.findUsersStartWith(loginParameter);
+      req.setAttribute("users", users);
+    } else {
+      final List<User> users = userService.findUsers();
+      req.setAttribute("users", users);
+    }
+    getServletContext().getRequestDispatcher("/main").forward(req, resp);
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response)
-      throws ServletException, IOException {
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    resp.setContentType("text/html");
 
-    final String login = request.getParameter("login");
-    final String password = request.getParameter("password");
-    Optional<User> user = userService.getUser(login);
+    String username = req.getParameter("inputLogin");
 
-    if (user.isPresent() && user.get().getPassword().equals(password)) {
-      request.getSession().setAttribute("loggedIn", true);
-      response.sendRedirect("main");
-    } else {
-      PrintWriter out = response.getWriter();
-      out.println("Username or password error");
-      getServletContext().getRequestDispatcher("login").forward(request, response);
+
+    try (Writer writer = resp.getWriter()) {
+      if (userService.isExists(username)) {
+        req.getServletContext().setAttribute("username", username);
+        req.getRequestDispatcher("/main.jsp").forward(req, resp);
+      } else {
+        writer.write("Authorization Error");
+      }
     }
   }
 }

@@ -10,4 +10,5 @@ public interface UserRepository {
   Optional<User> getUser(String login);
   void createUser(String login, String password);
   List<User> findUsersStartWith(String login);
+  boolean isExists(String login);
 }
